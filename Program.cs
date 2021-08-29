@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 
 /**
     * Author: Eric Hinners
@@ -16,6 +17,7 @@ using System.IO;
      - Assigned Name
      - Watchers Name(s)
     Each ticket should hold only one item per each value, with the exception of watcher names, in which they should be able to enter any number of names they like.
+    The user then has the option of adding a ticket, viewing all tickets, or closing the program.
 */
 
 namespace ehinnersTicketingSystem
@@ -27,17 +29,27 @@ namespace ehinnersTicketingSystem
             // Creates and Initializes Some Vlaues
             string file = "Tickets.csv";  // File Name For Streamreader and Streamwriter
             string input = "Y"; // Initial Value to start main loop, will later hold user input on whether or not they want to create more tickets
-            string temp; // Holds input from user after entering values that describe the ticket. Immediately put into the file.
+            string temp; // Holds input to evaluate before doing anything with them
+
             bool doneWatchNames; // Sentinel value that controls the inner loop for user to enter as many names of those who are watching the ticket.
             int numTickets = 1; // Holds the current index of the ticketID. If no file is found, starts at 0, otherwise starts back up at the last found ID.
             string welcome = "Welcome To Pewaukee Ticketing"; // Holds a value used for an introduction prompt
-            string[] oldTickets = new string[20];
+
+            int attribute; // When iterating through each attribute of each ticket, this keeps track of the position
 
             // Preps and introduces the console for clear user interface 
             Console.Clear();
             Console.WriteLine("=============================");
             Console.WriteLine(welcome);
             Console.WriteLine("=============================");
+
+            // Creates and Initializes a list to store values from the file
+            List<string> csvs = new List<string>();
+
+            string[] csvsplit; // Holds a temp amount of values from when each csv is split
+            string[] watchsplit; // holds a temp amount of values from when the watchlist is split
+
+            String tempcsv; //Temp placeholder String to hold input values as they're converted to a csv
 
             
             // Checks to see if a file is found. If yes, the file is quickly scanned along the ticket ID and the very last ticketID is stored.
@@ -49,6 +61,7 @@ namespace ehinnersTicketingSystem
                 {
                     temp = sr.ReadLine();
                     numTickets = int.Parse(temp.Substring(0,1));
+                    csvs.Add(temp);
                 }
                 Console.WriteLine("Last Entered Ticket ID: {0}",numTickets);
                 sr.Close(); // Allows access to the writer to add more tickets on top of what already exists.
@@ -59,35 +72,46 @@ namespace ehinnersTicketingSystem
             // Main loop to allow user to enter ticket info.
             do
             {
-                // First User is prompted to create a ticket, y for yes, n for no, anything else and the user is asked again
-                Console.WriteLine("Would You Like To Enter A Ticket?(Y/N)");
-                input = Console.ReadLine().ToUpper(); // Converts input to uppercase for less debugging
+                // First User is prompted with a menu. They can enter 1, 2, or 3. anything else and the user is asked again
+                Console.WriteLine("Please Enter:");
+                Console.WriteLine("1: To Create A New Ticket");
+                Console.WriteLine("2: To View All Current Tickets");
+                Console.WriteLine("3: Save Tickets To File And End The Program");
 
-                if(input =="Y")
+                input = Console.ReadLine(); 
+
+                if(input =="1")
                 {
-                    // User is prompted for Each Category of info the ticket needs, then that value is passed to the streamwriter for documentation
-                    sw.Write(numTickets+",");
+                    // User is prompted for Each Category of info the ticket needs, then that value is appended to tempcsv
+                    tempcsv = numTickets.ToString();
+                    tempcsv += ",";
+                    
                     Console.WriteLine("Please Enter A Summary:");
-                    temp = Console.ReadLine();
-                    sw.Write(temp+",");
+                    tempcsv += Console.ReadLine();
+                    tempcsv += ",";
+                    
                     Console.WriteLine("Please Enter Status:");
-                    temp = Console.ReadLine();
-                    sw.Write(temp+",");
+                    tempcsv += Console.ReadLine();
+                    tempcsv += ",";
+                    
                     Console.WriteLine("Please Enter The Priority:");
-                    temp = Console.ReadLine();
-                    sw.Write(temp+",");
+                    tempcsv += Console.ReadLine();
+                    tempcsv += ",";
+                    
                     Console.WriteLine("Please Enter The Name Of Who Submitted The Ticket:");
-                    temp = Console.ReadLine();
-                    sw.Write(temp+",");
+                    tempcsv += Console.ReadLine();
+                    tempcsv += ",";
+                    
                     Console.WriteLine("Please Enter The Name Of Who The Ticket Is Assigned To:");
-                    temp = Console.ReadLine();
-                    sw.Write(temp+",");
+                    tempcsv += Console.ReadLine();
+                    tempcsv += ",";
+                    
 
                     // User is prompted for the first watching name
                     Console.WriteLine("Please Enter Who Is Watching The Ticket:");
                     Console.WriteLine("(Only One Name At A Time Please)");
-                    temp = Console.ReadLine();
-                    sw.Write(temp);
+                    tempcsv += Console.ReadLine();
+            
 
                     // Resets Sentinel value for multiple runs
                     doneWatchNames = true;
@@ -103,25 +127,89 @@ namespace ehinnersTicketingSystem
                         }
                         else
                         {
-                            sw.Write("|"+temp); 
-                        }
-                        
+                            tempcsv += "|" + temp;
+                        }                        
                     }
-                    // Blank line with newline character is appended to start a fresh line for next ticket
-                    sw.WriteLine();
+
+                    // Adds csvtemp to list and and file
+                    csvs.Add(tempcsv);
+                    sw.WriteLine(tempcsv);
+
                     // numTickets is increased by one to increase the ticketID for the next ticket
                     numTickets++;
                 }
-                else if(input=="N") // Ends the loop if the user is finished entering tickets
+                else if(input=="2") // Lists all items in the array if user enters 2 
+                {
+                    
+                    // Title Section
+                    Console.Write("====================================================================");
+                    Console.WriteLine("================================================================");
+                    string padded = "TicketID";
+                    Console.Write(padded);
+                    padded = "Summary".PadLeft(12);
+                    Console.Write(padded);
+                    padded = "Status".PadLeft(35);
+                    Console.Write(padded);
+                    padded = "Priority".PadLeft(25);
+                    Console.Write(padded);
+                    padded = "Submitter".PadLeft(25);
+                    Console.Write(padded);
+                    padded = "Assigned".PadLeft(25);
+                    Console.WriteLine(padded);
+                    Console.Write("====================================================================");
+                    Console.WriteLine("================================================================");
+
+
+                    foreach(string csvLine in csvs) // iterates on each ticket
+                    {
+                        attribute = 1; // resets the index to keep track of which part of the csv is being held
+                        csvsplit = csvLine.Split(",");
+                        foreach(string ticketAttribute in csvsplit) // iterates on each part of the csv
+                        {                     
+                            // depending on which part of the csv is being iterated (controlled by attribute index)     
+                            // each line gets different formatting  
+                            padded = ticketAttribute.PadLeft(25);
+                            if(attribute ==1)
+                            {
+                                Console.Write(ticketAttribute + " ");
+                            }
+                            else if(attribute==7)
+                            {
+                                // watchlist gets a new line with a separate loop to iterate on each watcher
+                                Console.WriteLine();
+                                Console.Write("Watching: ");
+                                watchsplit = ticketAttribute.Split("|");
+                                foreach(string watcher in watchsplit)
+                                {
+                                    padded = watcher.PadLeft(25);
+                                    Console.Write(padded);
+                                }
+
+                                // formats the end of the output table
+                                Console.WriteLine();
+                                Console.Write("--------------------------------------------------------------------");
+                                Console.WriteLine("----------------------------------------------------------------");
+                            }
+                            else
+                            {            
+                                // default formatting for each item that is not the ticketID or the watchlist                    
+                                Console.Write(padded + " ");
+                            }
+                            attribute++;
+                        }
+                    }
+                    Console.WriteLine();
+                }
+                else if(input=="3") // Ends the loop if the user is finished 
                 {
                     break;
                 }
-                else // Informs the user of their mistake and readies the loop for another attempt to confirm ticket creation
+                else // Informs the user of their mistake and readies the loop for another iteration
                 {
-                    Console.WriteLine("Sorry, Please Only Enter Y or N");
-                    input="Y";
+                    Console.WriteLine("Sorry, Please Only Enter 1, 2, or 3");
+                    //input="Y";
                 }
-            }while(input == "Y");
+            }while(input != "3");
             sw.Close(); // Saves the file        
         }
     }

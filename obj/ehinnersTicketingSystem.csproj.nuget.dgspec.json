@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DotNetDatabase\\Homework\\ehinnersTicketingSystem\\ehinnersTicketingSystem.csproj": {}
+    "C:\\Users\\EHIN\\dotnetweb\\EHINNERSTICKETINGSYSTEM\\ehinnersTicketingSystem.csproj": {}
   },
   "projects": {
-    "D:\\DotNetDatabase\\Homework\\ehinnersTicketingSystem\\ehinnersTicketingSystem.csproj": {
+    "C:\\Users\\EHIN\\dotnetweb\\EHINNERSTICKETINGSYSTEM\\ehinnersTicketingSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DotNetDatabase\\Homework\\ehinnersTicketingSystem\\ehinnersTicketingSystem.csproj",
+        "projectUniqueName": "C:\\Users\\EHIN\\dotnetweb\\EHINNERSTICKETINGSYSTEM\\ehinnersTicketingSystem.csproj",
         "projectName": "ehinnersTicketingSystem",
-        "projectPath": "D:\\DotNetDatabase\\Homework\\ehinnersTicketingSystem\\ehinnersTicketingSystem.csproj",
+        "projectPath": "C:\\Users\\EHIN\\dotnetweb\\EHINNERSTICKETINGSYSTEM\\ehinnersTicketingSystem.csproj",
         "packagesPath": "C:\\Users\\EHIN\\.nuget\\packages\\",
-        "outputPath": "D:\\DotNetDatabase\\Homework\\ehinnersTicketingSystem\\obj\\",
+        "outputPath": "C:\\Users\\EHIN\\dotnetweb\\EHINNERSTICKETINGSYSTEM\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\EHIN\\AppData\\Roaming\\NuGet\\NuGet.Config"
